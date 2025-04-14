@@ -4,26 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-
-interface SolicitudFormData {
-  numero__caso: number;
-  nombres?: string;
-  apellido_paterno?: string;
-  apellido_materno?: string;
-  ci?: string;
-  complemento?: string;
-  fecha_nacimiento?: Dayjs | null;
-  placa?: string;
-  delito?: string;
-  investigador?: string;
-  tipo?: string;
-  fecha_solicitud?: Dayjs | null;
-  segip?: boolean;
-  sinarap?: boolean;
-  itv?: boolean;
-  impuestos?: boolean;
-  completado?: boolean;
-}
+import { SolicitudFormData } from '../interfaces/api_interfaces';
 
 const SolicitudForm: React.FC = () => {
   const [formData, setFormData] = useState<SolicitudFormData>({
@@ -69,25 +50,25 @@ const SolicitudForm: React.FC = () => {
           Formulario de Solicitud de Información
         </Typography>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 6 }} component="div">
+          <Grid size={{ xs: 12, md: 6 }} component="div">
             <TextField fullWidth label="Número de Caso" name="numero__caso" type="number" value={formData.numero__caso} onChange={handleChange} required />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Nombres" name="nombres" value={formData.nombres || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Apellido Paterno" name="apellido_paterno" value={formData.apellido_paterno || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Apellido Materno" name="apellido_materno" value={formData.apellido_materno || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="CI" name="ci" value={formData.ci || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Complemento" name="complemento" value={formData.complemento || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Fecha de Nacimiento"
@@ -96,19 +77,19 @@ const SolicitudForm: React.FC = () => {
             />
             </LocalizationProvider>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 , }}>
             <TextField fullWidth label="Placa del Vehículo" name="placa" value={formData.placa || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Delito" name="delito" value={formData.delito || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Investigador" name="investigador" value={formData.investigador || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField fullWidth label="Tipo de Solicitud" name="tipo" value={formData.tipo || ''} onChange={handleChange} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de Solicitud"
