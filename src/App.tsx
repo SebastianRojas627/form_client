@@ -1,8 +1,9 @@
 import Layout from "./components/Layout"
 import { createTheme, ThemeProvider } from '@mui/material'
 import SolicitudForm from "./views/SolicitudForm"
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
 import Dashboard from "./views/Dashboard"
+import Historial from "./views/Historial"
 
 function App() {
 
@@ -23,9 +24,10 @@ const theme = createTheme({
         <Layout>
           <Routes>
             <Route path="/form" element={<SolicitudForm />} />
-            <Route path="/solicitudes" element={<SolicitudForm />} />
-            <Route path="/pendientes" element={<SolicitudForm />} />
+            <Route path="/history" element={<Historial />} />
+            <Route path="/pending" element={<SolicitudForm />} />
             <Route path="/home" element={<Dashboard />} />
+            <Route path="*" element={<Navigate to="/home" />} />
           </Routes>
         </Layout>
       </ThemeProvider>

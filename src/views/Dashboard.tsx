@@ -29,6 +29,7 @@ import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import TotalIcon from "@mui/icons-material/Assignment";
 import FulfilledIcon from "@mui/icons-material/CheckCircle";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router";
 
 const mockSummary = {
   pending: 4,
@@ -122,6 +123,12 @@ const Dashboard = () => {
     "month"
   );
 
+  const navigate = useNavigate();
+
+  const onNewRequestClick = () => {
+    navigate('/form')
+  }
+
   const filteredGraphData = useMemo(() => {
     const today = new Date();
     return mockGraphData.filter((item) => {
@@ -158,7 +165,7 @@ const Dashboard = () => {
         mb={2}
       >
         <Typography variant="h5">Dashboard</Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={onNewRequestClick}>
           New Request
         </Button>
       </Box>

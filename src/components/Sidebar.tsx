@@ -12,18 +12,24 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Avatar } from '@mui/material';
+import { useNavigate } from 'react-router';
+import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
+import HistoryIcon from '@mui/icons-material/History';
+import PendingIcon from '@mui/icons-material/HourglassEmpty';
 
 const drawerWidth = 240;
 
-const links = ['Inbox', 'Starred', 'Send email', 'Drafts'] //text, icon, url link
-//highlight the element we are currently on
+const sidebarLinks = [
+  { text: 'Home', url: '/home', icon: <HomeIcon /> },
+  { text: 'Nueva Solicitud de Informacion', url: '/form', icon: <AddIcon /> },
+  { text: 'Solicitudes Pendientes', url: '/pending', icon: <PendingIcon /> },
+  { text: 'Historial de Solicitudes', url: '/history', icon: <HistoryIcon /> },
+];
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -107,6 +113,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Sidebar() {
+
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -152,62 +160,29 @@ export default function Sidebar() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <Typography
+              variant="h6"
+              component="h3"
+              sx={{ p: 2, textAlign: 'left', whiteSpace: 'nowrap' }}
+              >
+            Menu
+          </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          {links.map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
+          <List>
+            {sidebarLinks.map((item, index) => (
+              <ListItemButton key={index} onClick={() => navigate(item.url)}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} sx={ open ? {
+                    whiteSpace: 'normal',
+                    wordWrap: 'break-word',
+                  } : {}} />
               </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+            ))}
+          </List>
         <Divider />
       </Drawer>
     </Box>
