@@ -18,6 +18,31 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
 import { generatePdf } from "../utils/generatePdf";
+import dayjs from "dayjs";
+
+function jsonToFormData(json: any, formData = new FormData(), parentKey = "") {
+  for (const key in json) {
+    if (json.hasOwnProperty(key)) {
+      const value = json[key];
+      const fullKey = parentKey ? `${parentKey}[${key}]` : key;
+
+      if (value instanceof Date) {
+        formData.append(fullKey, value.toISOString());
+      } else if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        // Recurse for nested objects
+        jsonToFormData(value, formData, fullKey);
+      } else if (Array.isArray(value)) {
+        // Append arrays with indexes
+        value.forEach((item, index) => {
+          jsonToFormData(item, formData, `${fullKey}[${index}]`);
+        });
+      } else {
+        formData.append(fullKey, value);
+      }
+    }
+  }
+  return formData;
+}
 
 const mockInvestigadores = [
   "Sargento Perez",
@@ -83,7 +108,6 @@ export default function InfoRequestForm() {
     setFormValues(data);
     setShowConfirmButtons(true);
 
-    // Preview the PDF in a new tab
     const pdfUrl = URL.createObjectURL(pdf);
     const win = window.open(pdfUrl, "_blank");
     if (win) {
@@ -95,25 +119,11 @@ export default function InfoRequestForm() {
   const confirmSubmission = async () => {
     if (!formValues || !pdfBlob) return;
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("data", JSON.stringify(formValues));
-    formDataToSend.append("pdf", new File([pdfBlob], "solicitud.pdf", { type: "application/pdf" }));
+    const formData = jsonToFormData(formValues);
+    formData.append("pdf", new File([pdfBlob], "solicitud.pdf", { type: "application/pdf" }));
 
-    try {
-      const response = await fetch("/api/submit-info-request", {
-        method: "POST",
-        body: formDataToSend,
-      });
-
-      if (response.ok) {
-        alert("Solicitud enviada exitosamente.");
-        // Clear state if needed
-      } else {
-        alert("Error al enviar la solicitud.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error al conectar con el servidor.");
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
     }
 
     setShowConfirmButtons(false);
@@ -235,8 +245,11 @@ export default function InfoRequestForm() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="F/N"
-                            value={field.value}
-                            onChange={field.onChange}
+                            value={field.value ? dayjs(field.value) : null}
+                            onChange={(date) => {
+                              const formattedDate = date ? dayjs(date).format("YYYY-MM-DD") : null
+                              field.onChange(formattedDate)
+                            }}
                           />
                         </LocalizationProvider>
                       )}
