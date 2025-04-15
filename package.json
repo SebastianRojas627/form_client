@@ -17,6 +17,7 @@
     "@mui/x-date-pickers": "^7.28.3",
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",
+    "jspdf": "^3.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",

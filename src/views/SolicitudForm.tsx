@@ -16,6 +16,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useState } from "react";
+import { generatePdf } from "../utils/generatePdf";
 
 const mockInvestigadores = [
   "Sargento Perez",
@@ -26,6 +28,11 @@ const mockInvestigadores = [
 const mockDelitos = ["Hurto", "Robo agravado", "Estafa", "Homicidio"];
 
 export default function InfoRequestForm() {
+
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
+  const [formValues, setFormValues] = useState<any>(null);
+  const [showConfirmButtons, setShowConfirmButtons] = useState(false);
+
   const {
     control,
     register,
@@ -70,7 +77,52 @@ export default function InfoRequestForm() {
   const sujetos = watch("sujetos");
 
   const onSubmit = (data: any) => {
-    console.log("Form Data:");
+    console.log("Form data submitted:", data);
+    const pdf = generatePdf(data);
+    setPdfBlob(pdf);
+    setFormValues(data);
+    setShowConfirmButtons(true);
+
+    // Preview the PDF in a new tab
+    const pdfUrl = URL.createObjectURL(pdf);
+    const win = window.open(pdfUrl, "_blank");
+    if (win) {
+      win.opener = null;
+      win.document.title = "Vista previa de PDF";
+    }
+  };
+
+  const confirmSubmission = async () => {
+    if (!formValues || !pdfBlob) return;
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("data", JSON.stringify(formValues));
+    formDataToSend.append("pdf", new File([pdfBlob], "solicitud.pdf", { type: "application/pdf" }));
+
+    try {
+      const response = await fetch("/api/submit-info-request", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (response.ok) {
+        alert("Solicitud enviada exitosamente.");
+        // Clear state if needed
+      } else {
+        alert("Error al enviar la solicitud.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor.");
+    }
+
+    setShowConfirmButtons(false);
+  };
+
+  const cancelSubmission = () => {
+    setPdfBlob(null);
+    setFormValues(null);
+    setShowConfirmButtons(false);
   };
 
   const canAddMore = fields.length < 12;
@@ -281,9 +333,16 @@ export default function InfoRequestForm() {
           ))}
         </TextField>
 
-        <Button type="submit" variant="contained" fullWidth>
-          Enviar Solicitud
+        <Button variant="contained" type="submit">
+          Generar Vista Previa PDF
         </Button>
+
+      {showConfirmButtons && (
+        <div style={{ marginTop: 16 }}>
+          <button onClick={confirmSubmission} style={{ marginRight: 8 }}>Confirmar y Enviar</button>
+          <button onClick={cancelSubmission}>Cancelar</button>
+        </div>
+      )}
       </Box>
     </Container>
   );
