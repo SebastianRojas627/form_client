@@ -9,17 +9,21 @@ export const generatePdf = (formData: any): Blob => {
 
   // Encabezado izquierdo
   doc.setFont("times", "bold");
-  doc.text("POLICIA BOLIVIANA", 10, y); y += 6 * lineSpacing;
+  doc.text("POLICIA BOLIVIANA", 10, y);
+  y += 6 * lineSpacing;
   doc.setFont("times", "normal");
-  doc.text("DIRECCION DEPARTAMENTAL", 10, y); y += 6 * lineSpacing;
-  doc.text("FUERZA ESPECIAL DE LUCHA CONTRA EL CRIMEN", 10, y); y += 6 * lineSpacing;
+  doc.text("DIRECCION DEPARTAMENTAL", 10, y);
+  y += 6 * lineSpacing;
+  doc.text("FUERZA ESPECIAL DE LUCHA CONTRA EL CRIMEN", 10, y);
+  y += 6 * lineSpacing;
   doc.text("La Paz - Bolivia", 10, y);
 
   // Encabezado derecho (en blanco)
   y = 10;
   const rightX = 130;
   const addRightField = (label: string) => {
-    doc.text(`${label} ${'.'.repeat(50)}`, rightX, y); y += 6 * lineSpacing;
+    doc.text(`${label} ${".".repeat(50)}`, rightX, y);
+    y += 6 * lineSpacing;
   };
   addRightField("Caso N°:");
   addRightField("División:");
@@ -32,8 +36,14 @@ export const generatePdf = (formData: any): Blob => {
   y += 8 * lineSpacing;
 
   doc.setFont("times", "normal");
-  doc.text("El Jefe de la División: " + ".".repeat(80), 10, y); y += 6 * lineSpacing;
-  doc.text("Se solicita al Sr. Jefe del CENTRO DE FUSION DE INFORMACION DE LA FELCC la información de:", 10, y); y += 6 * lineSpacing;
+  doc.text("El Jefe de la División: " + ".".repeat(80), 10, y);
+  y += 6 * lineSpacing;
+  doc.text(
+    "Se solicita al Sr. Jefe del CENTRO DE FUSION DE INFORMACION DE LA FELCC la información de:",
+    10,
+    y
+  );
+  y += 6 * lineSpacing;
 
   const serviciosLabels = {
     segip: "SEGIP",
@@ -45,7 +55,11 @@ export const generatePdf = (formData: any): Blob => {
   const roman = ["I", "II", "III", "IV"];
   Object.entries(serviciosLabels).forEach(([key, label], index) => {
     const checkBoxX = 180;
-    doc.text(`${roman[index]}. ${label.toUpperCase()} ${'.'.repeat(40)}`, 10, y);
+    doc.text(
+      `${roman[index]}. ${label.toUpperCase()} ${".".repeat(40)}`,
+      10,
+      y
+    );
     doc.rect(checkBoxX, y - 4, 4, 4);
     if (servicios[key]) {
       doc.text("X", checkBoxX + 1, y - 1);
@@ -54,7 +68,8 @@ export const generatePdf = (formData: any): Blob => {
   });
 
   y += 4;
-  doc.text("De la(s) siguiente(s) persona(s) o /placa:", 10, y); y += 6 * lineSpacing;
+  doc.text("De la(s) siguiente(s) persona(s) o /placa:", 10, y);
+  y += 6 * lineSpacing;
 
   const tableTop = y;
   const tableLeft = 10;
@@ -90,10 +105,21 @@ export const generatePdf = (formData: any): Blob => {
     let nombre = "";
     let ci = "";
     let fn = "";
+    let fnRaw = ""
+    let date: Date;
+    let year;
+    let month;
+    let day;
     if (sujeto.tipo === "persona") {
       nombre = `${sujeto.nombres} ${sujeto.apellido_paterno} ${sujeto.apellido_materno}`;
       ci = sujeto.ci;
-      fn = String(sujeto.fecha_nacimiento);
+      fnRaw = String(sujeto.fecha_nacimiento);
+      date = new Date(fnRaw)
+      year = date.getFullYear();
+      month = String(date.getMonth() + 1).padStart(2, "0");
+      day = String(date.getDate()).padStart(2, "0");
+
+      fn = `${year}/${month}/${day}`;
     } else {
       nombre = sujeto.placa;
     }
@@ -104,19 +130,46 @@ export const generatePdf = (formData: any): Blob => {
 
   y = tableTop + tableHeight + 10;
   const dottedLine = (label: string, value: string = "") =>
-    `${label} ${value}${'.'.repeat(90 - label.length - value.length)}`;
+    `${label} ${value}${".".repeat(90 - label.length - value.length)}`;
 
-  doc.text(dottedLine("Los mismos que servirán para proseguir con las investigaciones en el caso No:", formData.caso_unidad), 10, y); y += 6 * lineSpacing;
+  doc.text(
+    dottedLine(
+      "Los mismos que servirán para proseguir con las investigaciones en el caso No:",
+      formData.caso_unidad
+    ),
+    10,
+    y
+  );
+  y += 6 * lineSpacing;
   doc.text(dottedLine("Por el delito de:", formData.delito), 10, y);
-  doc.text(dottedLine("A cargo del Sr.(a):", formData.investigador), 10, y += 6 * lineSpacing);
+  doc.text(
+    dottedLine("A cargo del Sr.(a):", formData.investigador),
+    10,
+    (y += 6 * lineSpacing)
+  );
   y += 6 * lineSpacing;
 
-  doc.text("Investigador(a) asignado(a) al presente caso", 10, y); y += 6 * lineSpacing;
+  doc.text("Investigador(a) asignado(a) al presente caso", 10, y);
+  y += 6 * lineSpacing;
 
   const date = new Date();
-  const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
-                  "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-  const formattedDate = `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+  const months = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
+  const formattedDate = `${date.getDate()} de ${
+    months[date.getMonth()]
+  } de ${date.getFullYear()}`;
 
   doc.text(`La Paz, ${formattedDate}`, 150, y, { align: "right" });
 

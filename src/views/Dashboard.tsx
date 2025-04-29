@@ -109,12 +109,8 @@ const SummaryCard = ({
 );
 
 const statusPieData = [
-  { name: "Pending", value: mockSummary.pending },
-  { name: "Fulfilled", value: mockSummary.fulfilled },
-  {
-    name: "Others",
-    value: mockSummary.total - mockSummary.pending - mockSummary.fulfilled,
-  },
+  { name: "Pendientes", value: mockSummary.pending },
+  { name: "Resueltas", value: mockSummary.fulfilled },
 ];
 const pieColors = ["#f44336", "#4caf50", "#9e9e9e"];
 
@@ -166,14 +162,14 @@ const Dashboard = () => {
       >
         <Typography variant="h5">Dashboard</Typography>
         <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={onNewRequestClick}>
-          New Request
+          Nueva Solicitud
         </Button>
       </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <SummaryCard
-            title="Pending Requests"
+            title="Solicitudes Pendientes"
             value={mockSummary.pending}
             color="#f44336"
             icon={<PendingIcon fontSize="large" />}
@@ -181,7 +177,7 @@ const Dashboard = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <SummaryCard
-            title="Fulfilled Requests"
+            title="Solicitudes Resueltas"
             value={mockSummary.fulfilled}
             color="#4caf50"
             icon={<FulfilledIcon fontSize="large" />}
@@ -189,7 +185,7 @@ const Dashboard = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <SummaryCard
-            title="Total Requests"
+            title="Todas las Solicitudes"
             value={mockSummary.total}
             color="#2196f3"
             icon={<TotalIcon fontSize="large" />}
@@ -203,16 +199,16 @@ const Dashboard = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography variant="h6">Requests Over Time</Typography>
+              <Typography variant="h6">Solicitudes en el Tiempo</Typography>
               <ToggleButtonGroup
                 value={timeRange}
                 exclusive
                 onChange={handleTimeRangeChange}
                 size="small"
               >
-                <ToggleButton value="week">This Week</ToggleButton>
-                <ToggleButton value="month">This Month</ToggleButton>
-                <ToggleButton value="year">This Year</ToggleButton>
+                <ToggleButton value="week">Semana</ToggleButton>
+                <ToggleButton value="month">Mes</ToggleButton>
+                <ToggleButton value="year">Año</ToggleButton>
               </ToggleButtonGroup>
             </Box>
             <ResponsiveContainer width="100%" height={300}>
@@ -235,7 +231,7 @@ const Dashboard = () => {
         <Grid size={{ xs: 12, md: 4 }}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Status Breakdown
+              Desglose estado
             </Typography>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -264,7 +260,7 @@ const Dashboard = () => {
         <Grid size={{ xs: 12 }}>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Last 5 Requests
+              Ultimas 5 Solicitudes
             </Typography>
             <List>
               {mockRecentRequests.map((req) => (

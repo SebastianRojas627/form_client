@@ -148,10 +148,10 @@ export default function Sidebar() {
           <Typography variant="h6" noWrap sx={
             { flexGrow: 1 }
           }>
-            Mini variant drawer
+            Unidad Investigativa
           </Typography>
           <Typography variant="h6">
-            User
+            Usuario
           </Typography>
           <Avatar sx={
             { ml: 2 }
