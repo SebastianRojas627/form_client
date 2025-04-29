@@ -21,7 +21,7 @@ import InfoRequestModal, {
 
 const mockData = Array.from({ length: 35 }, (_, i) => ({
   solicitud_informacion_id: `uuid-${i + 1}`,
-  numero__caso: 1000 + i,
+  numero_caso: 1000 + i,
   nombres: `Nombre${i}`,
   apellido_paterno: `ApellidoP${i}`,
   apellido_materno: `ApellidoM${i}`,

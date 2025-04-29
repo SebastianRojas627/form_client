@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export interface SolicitudInformacion {
   solicitud_informacion_id: string | null;
-  numero__caso: number | null;
+  numero_caso: number | null;
   nombres: string | null;
   apellido_paterno: string | null;
   apellido_materno: string | null;
@@ -113,7 +113,7 @@ const InfoRequestModal: React.FC<Props> = ({ open, onClose, request }) => {
           </Grid>
           <Grid size={{ xs: 3 }}>
             <Typography>
-              <strong>Nº Caso:</strong> {request.numero__caso}
+              <strong>Nº Caso:</strong> {request.numero_caso}
             </Typography>
           </Grid>
           <Grid size={{ xs: 3 }}>

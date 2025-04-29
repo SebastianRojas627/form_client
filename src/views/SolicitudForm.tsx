@@ -19,6 +19,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
 import { generatePdf } from "../utils/generatePdf";
 import dayjs from "dayjs";
+import { SolicitudInformacion, TipoSujeto } from '../api/types'
+import { createInformationRequest, uploadInfoRequestDoc } from "../api/informationRequest";
 
 function jsonToFormData(json: any, formData = new FormData(), parentKey = "") {
   for (const key in json) {
@@ -55,7 +57,7 @@ const mockDelitos = ["Hurto", "Robo agravado", "Estafa", "Homicidio"];
 export default function InfoRequestForm() {
 
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
-  const [formValues, setFormValues] = useState<any>(null);
+  const [formValues, setFormValues] = useState<SolicitudInformacion | null>(null);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
 
   const {
@@ -65,9 +67,9 @@ export default function InfoRequestForm() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<SolicitudInformacion>({
     defaultValues: {
-      servicios: {
+      sistemas: {
         segip: false,
         sinarap: false,
         itv: false,
@@ -75,7 +77,7 @@ export default function InfoRequestForm() {
       },
       sujetos: [
         {
-          tipo: "persona",
+          tipo: TipoSujeto.PERSONA,
           nombres: "",
           apellido_paterno: "",
           apellido_materno: "",
@@ -84,9 +86,10 @@ export default function InfoRequestForm() {
           placa: "",
         },
       ],
-      caso_unidad: "",
+      numero_caso_unidad: "",
       delito: "", 
       investigador: "",
+      unidad_investigativa: "test"
     },
   });
 
@@ -98,15 +101,19 @@ export default function InfoRequestForm() {
   const servicioFields = ["segip", "sinarap", "itv", "impuestos"] as const;
   type ServicioField = typeof servicioFields[number];
 
-  const servicios = watch("servicios");
+  const sistemas = watch("sistemas");
   const sujetos = watch("sujetos");
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log("Form data submitted:", data);
     const pdf = generatePdf(data);
     setPdfBlob(pdf);
     setFormValues(data);
     setShowConfirmButtons(true);
+
+    const response = await createInformationRequest(formValues!);
+    const solicitud_id = response.solicitud_informacion_id;
+    console.log('response', response)
 
     const pdfUrl = URL.createObjectURL(pdf);
     const win = window.open(pdfUrl, "_blank");
@@ -114,17 +121,25 @@ export default function InfoRequestForm() {
       win.opener = null;
       win.document.title = "Vista previa de PDF";
     }
+
+    const formData = new FormData()
+    formData.append("solicitud_id", String(solicitud_id))
+    formData.append("tipo", 'solicitud')
+    formData.append("file", new File([pdfBlob!], "solicitud.pdf", { type: "application/pdf" }));
+
+    console.log(await uploadInfoRequestDoc(formData))
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
   };
 
   const confirmSubmission = async () => {
     if (!formValues || !pdfBlob) return;
 
-    const formData = jsonToFormData(formValues);
-    formData.append("pdf", new File([pdfBlob], "solicitud.pdf", { type: "application/pdf" }));
+    console.log(formValues)
 
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
+    
 
     setShowConfirmButtons(false);
   };
@@ -149,9 +164,9 @@ export default function InfoRequestForm() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    {...register(`servicios.${field}` as const, {
+                    {...register(`sistemas.${field}` as const, {
                       validate: (value) => {
-                        const atLeastOne = Object.values(servicios).some(Boolean);
+                        const atLeastOne = Object.values(sistemas).some(Boolean);
                         return atLeastOne || "Seleccione al menos una opción";
                       },
                     })}
@@ -162,8 +177,8 @@ export default function InfoRequestForm() {
             </Grid>
           ))}
         </Grid>
-        {errors.servicios?.root && (
-          <Typography color="error">{errors.servicios.root.message}</Typography>
+        {errors.sistemas?.root && (
+          <Typography color="error">{errors.sistemas.root.message}</Typography>
         )}
 
         <Typography variant="h6" mt={4} gutterBottom>
@@ -179,7 +194,7 @@ export default function InfoRequestForm() {
                   control={
                     <Checkbox
                       checked={tipo === "persona"}
-                      onChange={() => setValue(`sujetos.${index}.tipo`, "persona")}
+                      onChange={() => setValue(`sujetos.${index}.tipo`, TipoSujeto.PERSONA)}
                     />
                   }
                   label="Persona"
@@ -188,7 +203,7 @@ export default function InfoRequestForm() {
                   control={
                     <Checkbox
                       checked={tipo === "vehiculo"}
-                      onChange={() => setValue(`sujetos.${index}.tipo`, "vehiculo")}
+                      onChange={() => setValue(`sujetos.${index}.tipo`, TipoSujeto.VEHICULO)}
                     />
                   }
                   label="Vehículo"
@@ -276,11 +291,12 @@ export default function InfoRequestForm() {
             startIcon={<AddIcon />}
             onClick={() =>
               append({
-                tipo: "persona",
+                tipo: TipoSujeto.PERSONA,
                 nombres: "",
                 apellido_paterno: "",
                 apellido_materno: "",
                 ci: "",
+                complemento: "",
                 fecha_nacimiento: null,
                 placa: "",
               })
@@ -298,9 +314,9 @@ export default function InfoRequestForm() {
         <TextField
           fullWidth
           label="Número de Caso de la Unidad"
-          {...register("caso_unidad", { required: true })}
-          error={!!errors?.caso_unidad}
-          helperText={errors?.caso_unidad && "Requerido"}
+          {...register("numero_caso_unidad", { required: true })}
+          error={!!errors?.numero_caso_unidad}
+          helperText={errors?.numero_caso_unidad && "Requerido"}
           sx={{ mt: 2, mb: 2 }}
         />
 

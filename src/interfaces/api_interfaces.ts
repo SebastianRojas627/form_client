@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
 
 export interface SolicitudFormData {
-  numero__caso: number;
+  numero_caso: number;
   nombres?: string;
   apellido_paterno?: string;
   apellido_materno?: string;

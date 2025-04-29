@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
+import { SistemasSolicitados, SolicitudInformacion } from "../api/types";
 
-export const generatePdf = (formData: any): Blob => {
+export const generatePdf = (formData: SolicitudInformacion): Blob => {
   const doc = new jsPDF();
   doc.setFont("times", "");
   doc.setFontSize(12);
@@ -51,17 +52,14 @@ export const generatePdf = (formData: any): Blob => {
     itv: "ITV",
     impuestos: "IMPUESTOS",
   };
-  const servicios = formData.servicios;
+
+  const sistemas = formData.sistemas;
   const roman = ["I", "II", "III", "IV"];
   Object.entries(serviciosLabels).forEach(([key, label], index) => {
     const checkBoxX = 180;
-    doc.text(
-      `${roman[index]}. ${label.toUpperCase()} ${".".repeat(40)}`,
-      10,
-      y
-    );
+    doc.text(`${roman[index]}. ${label} ${".".repeat(40)}`, 10, y);
     doc.rect(checkBoxX, y - 4, 4, 4);
-    if (servicios[key]) {
+    if (sistemas[key as keyof SistemasSolicitados]) {
       doc.text("X", checkBoxX + 1, y - 1);
     }
     y += 6 * lineSpacing;
@@ -105,7 +103,7 @@ export const generatePdf = (formData: any): Blob => {
     let nombre = "";
     let ci = "";
     let fn = "";
-    let fnRaw = ""
+    let fnRaw = "";
     let date: Date;
     let year;
     let month;
@@ -114,7 +112,7 @@ export const generatePdf = (formData: any): Blob => {
       nombre = `${sujeto.nombres} ${sujeto.apellido_paterno} ${sujeto.apellido_materno}`;
       ci = sujeto.ci;
       fnRaw = String(sujeto.fecha_nacimiento);
-      date = new Date(fnRaw)
+      date = new Date(fnRaw);
       year = date.getFullYear();
       month = String(date.getMonth() + 1).padStart(2, "0");
       day = String(date.getDate()).padStart(2, "0");
@@ -135,7 +133,7 @@ export const generatePdf = (formData: any): Blob => {
   doc.text(
     dottedLine(
       "Los mismos que servirán para proseguir con las investigaciones en el caso No:",
-      formData.caso_unidad
+      formData.numero_caso_unidad
     ),
     10,
     y
