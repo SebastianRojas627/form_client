@@ -22,30 +22,6 @@ import dayjs from "dayjs";
 import { SolicitudInformacion, TipoSujeto } from '../api/types'
 import { createInformationRequest, uploadInfoRequestDoc } from "../api/informationRequest";
 
-function jsonToFormData(json: any, formData = new FormData(), parentKey = "") {
-  for (const key in json) {
-    if (json.hasOwnProperty(key)) {
-      const value = json[key];
-      const fullKey = parentKey ? `${parentKey}[${key}]` : key;
-
-      if (value instanceof Date) {
-        formData.append(fullKey, value.toISOString());
-      } else if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-        // Recurse for nested objects
-        jsonToFormData(value, formData, fullKey);
-      } else if (Array.isArray(value)) {
-        // Append arrays with indexes
-        value.forEach((item, index) => {
-          jsonToFormData(item, formData, `${fullKey}[${index}]`);
-        });
-      } else {
-        formData.append(fullKey, value);
-      }
-    }
-  }
-  return formData;
-}
-
 const mockInvestigadores = [
   "Sargento Perez",
   "Tte. Rodriguez",
@@ -57,8 +33,6 @@ const mockDelitos = ["Hurto", "Robo agravado", "Estafa", "Homicidio"];
 export default function InfoRequestForm() {
 
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
-  const [formValues, setFormValues] = useState<SolicitudInformacion | null>(null);
-  const [showConfirmButtons, setShowConfirmButtons] = useState(false);
 
   const {
     control,
@@ -99,19 +73,15 @@ export default function InfoRequestForm() {
   });
 
   const servicioFields = ["segip", "sinarap", "itv", "impuestos"] as const;
-  type ServicioField = typeof servicioFields[number];
 
   const sistemas = watch("sistemas");
-  const sujetos = watch("sujetos");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: SolicitudInformacion) => {
     console.log("Form data submitted:", data);
     const pdf = generatePdf(data);
     setPdfBlob(pdf);
-    setFormValues(data);
-    setShowConfirmButtons(true);
 
-    const response = await createInformationRequest(formValues!);
+    const response = await createInformationRequest(data);
     const solicitud_id = response.solicitud_informacion_id;
     console.log('response', response)
 
@@ -134,22 +104,6 @@ export default function InfoRequestForm() {
     }
   };
 
-  const confirmSubmission = async () => {
-    if (!formValues || !pdfBlob) return;
-
-    console.log(formValues)
-
-    
-
-    setShowConfirmButtons(false);
-  };
-
-  const cancelSubmission = () => {
-    setPdfBlob(null);
-    setFormValues(null);
-    setShowConfirmButtons(false);
-  };
-
   const canAddMore = fields.length < 12;
 
   return (
@@ -165,7 +119,7 @@ export default function InfoRequestForm() {
                 control={
                   <Checkbox
                     {...register(`sistemas.${field}` as const, {
-                      validate: (value) => {
+                      validate: () => {
                         const atLeastOne = Object.values(sistemas).some(Boolean);
                         return atLeastOne || "Seleccione al menos una opción";
                       },
@@ -365,13 +319,6 @@ export default function InfoRequestForm() {
         <Button variant="contained" type="submit">
           Generar Vista Previa PDF
         </Button>
-
-      {showConfirmButtons && (
-        <div style={{ marginTop: 16 }}>
-          <button onClick={confirmSubmission} style={{ marginRight: 8 }}>Confirmar y Enviar</button>
-          <button onClick={cancelSubmission}>Cancelar</button>
-        </div>
-      )}
       </Box>
     </Container>
   );
