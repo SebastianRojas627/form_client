@@ -1,5 +1,4 @@
 import {
-  Container,
   Grid,
   Box,
   Typography,
@@ -107,7 +106,6 @@ export default function InfoRequestForm() {
   const canAddMore = fields.length < 12;
 
   return (
-    <Container>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 4 }}>
         <Typography variant="h6" gutterBottom>
           Se solicita al Sr. Jefe del CENTRO DE FUSION DE INFORMACION DE LA FELCC la información de:
@@ -320,6 +318,5 @@ export default function InfoRequestForm() {
           Generar Vista Previa PDF
         </Button>
       </Box>
-    </Container>
   );
 }
