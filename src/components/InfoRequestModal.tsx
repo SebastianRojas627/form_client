@@ -17,7 +17,6 @@ export interface SolicitudInformacion {
   apellido_materno: string | null;
   ci: string | null;
   complemento: string | null;
-  fecha_nacimiento: string | null;
   placa: string | null;
   delito: string | null;
   investigador: string | null;
@@ -92,11 +91,6 @@ const InfoRequestModal: React.FC<Props> = ({ open, onClose, request }) => {
           <Grid size={{ xs: 3 }}>
             <Typography>
               <strong>Complemento:</strong> {request.complemento ?? "-"}
-            </Typography>
-          </Grid>
-          <Grid size={{ xs: 3 }}>
-            <Typography>
-              <strong>Fecha de Nacimiento:</strong> {request.fecha_nacimiento}
             </Typography>
           </Grid>
 

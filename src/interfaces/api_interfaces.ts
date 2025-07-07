@@ -7,7 +7,6 @@ export interface SolicitudFormData {
   apellido_materno?: string;
   ci?: string;
   complemento?: string;
-  fecha_nacimiento?: Dayjs | null;
   placa?: string;
   delito?: string;
   investigador?: string;
