@@ -7,7 +7,6 @@ import Historial from "./views/Historial";
 import LoadingRedirect from "./components/LoadingRedirect";
 import { Urls } from "./utils/routes";
 import { UserConfigView } from "./components/UserConfigView";
-import DocumentReport from "./views/DocumentReport";
 import ResultsPage from "./components/ResultsPage";
 
 function App() {
@@ -56,7 +55,6 @@ function App() {
             <Route path="/auth/initialize" element={<LoadingRedirect />} />
             <Route path={Urls.NUEVA} element={<SolicitudForm />} />
             <Route path={Urls.HISTORY} element={<Historial />} />
-            <Route path={Urls.REPORTS} element={<DocumentReport />} />
             <Route path={Urls.HOME} element={<Dashboard />} />
             <Route path={Urls.SETTINGS} element={<UserConfigView />} />
             <Route

@@ -46,17 +46,18 @@ export default function InfoRequestForm() {
   } = useForm<SolicitudInformacion>({
     mode: "onSubmit",
     defaultValues: {
+      delito: "",
+      investigador: user ? user.fullName : 'Investigador Prueba',
+      unidad_investigativa: user ? user.organismoFullName : 'Unidad investigador',
+      numero_caso_unidad: "",
+      consulta_libre: false,
       sistemas: {
         segip: false,
         sinarap: false,
         itv: false,
-        anh: false,
+        // anh: false,
       },
       sujetos: [],
-      numero_caso_unidad: "",
-      delito: "",
-      investigador: user?.fullName,
-      unidad_investigativa: user?.organismoFullName,
     },
   });
 
@@ -85,15 +86,12 @@ export default function InfoRequestForm() {
 
     append({
       tipo: defaultTipo,
-      nombres: "",
-      apellido_paterno: "",
-      apellido_materno: "",
-      ci: "",
-      complemento: "",
-      placa: "",
-      carguio_combustible: false,
-      fechaini: null,
-      fechafin: null,
+      ci: null,
+      complemento: null,
+      placa: null,
+      // carguio_combustible: false,
+      // fechaini: null,
+      // fechafin: null,
     });
   };
 
@@ -116,7 +114,7 @@ export default function InfoRequestForm() {
     } else if (activeStep === 1) {
       valid = await trigger("sujetos");
     } else if (activeStep === 2) {
-      valid = await trigger("datos_caso");
+      valid = await trigger(["numero_caso_unidad", "delito"]);
     } else {
       valid = true;
     }
@@ -236,12 +234,12 @@ export default function InfoRequestForm() {
                 <TextField
                   fullWidth
                   label="Número de Caso de la Unidad"
-                  {...register("datos_caso.numero_caso_unidad", {
+                  {...register("numero_caso_unidad", {
                     required: true,
                   })}
-                  error={!!errors?.datos_caso?.numero_caso_unidad}
+                  error={!!errors?.numero_caso_unidad}
                   helperText={
-                    errors?.datos_caso?.numero_caso_unidad ? "Requerido" : ""
+                    errors?.numero_caso_unidad ? "Requerido" : ""
                   }
                   sx={{ mt: 2, mb: 2 }}
                 />
@@ -252,11 +250,11 @@ export default function InfoRequestForm() {
                   select
                   fullWidth
                   label="Delito"
-                  {...register("datos_caso.delito", { required: true })}
-                  error={!!errors?.datos_caso?.delito}
-                  helperText={errors?.datos_caso?.delito ? "Requerido" : ""}
+                  {...register("delito", { required: true })}
+                  error={!!errors?.delito}
+                  helperText={errors?.delito ? "Requerido" : ""}
                   sx={{ mt: 2, mb: 2 }}
-                  value={watch("datos_caso.delito") || ""}
+                  value={watch("delito") || ""}
                 >
                   {mockDelitos.map((d) => (
                     <MenuItem key={d} value={d}>

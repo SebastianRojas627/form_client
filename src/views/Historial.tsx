@@ -111,9 +111,9 @@ const RequestHistory = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Numero de Caso</TableCell>
-                <TableCell>Unidad Investigativa</TableCell>
+                <TableCell>Completado Por</TableCell>
                 <TableCell>Delito</TableCell>
-                <TableCell>Investigador</TableCell>
+                <TableCell>Numero de Copias</TableCell>
                 <TableCell>Fecha Solicitud</TableCell>
                 <TableCell>Estado</TableCell>
                 <TableCell align="center">Acciones</TableCell>
@@ -123,9 +123,9 @@ const RequestHistory = () => {
               {responseRows.map((row) => (
                 <TableRow key={row.solicitud_informacion_id}>
                   <TableCell>{row.numero_caso}</TableCell>
-                  <TableCell>{row.unidad_investigativa}</TableCell>
+                  <TableCell>{row.analista_cfi}</TableCell>
                   <TableCell>{row.delito}</TableCell>
-                  <TableCell>{row.investigador}</TableCell>
+                  <TableCell>{row.numero_copias}</TableCell>
                   <TableCell>{new Date(row.fecha_solicitud).toISOString().split('T')[0]}</TableCell>
                   <TableCell>
                     {row.completado ? "Completado" : "Pendiente"}

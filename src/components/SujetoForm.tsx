@@ -7,7 +7,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { SolicitudInformacion, TipoSujeto } from "../api/types";
 import {
   FieldArrayWithId,
@@ -43,38 +43,23 @@ export const SujetoForm = ({
   vehiculoEnabled,
   anhSelected,
 }: SujetoFormProps) => {
-  const [searchByCi, setSearchByCi] = useState(true);
 
   const tipo = watch(`sujetos.${index}.tipo`);
-  const incluirCarga = watch(`sujetos.${index}.carguio_combustible`);
+  // const incluirCarga = watch(`sujetos.${index}.carguio_combustible`);
 
   const requiredLabel = (label: string) => `${label} *`;
 
   useEffect(() => {
     if (tipo === TipoSujeto.PERSONA) {
-      setValue(`sujetos.${index}.placa`, "");
-      setValue(`sujetos.${index}.carguio_combustible`, false);
-      setValue(`sujetos.${index}.fechaini`, null);
-      setValue(`sujetos.${index}.fechafin`, null);
+      setValue(`sujetos.${index}.placa`, null);
+      // setValue(`sujetos.${index}.carguio_combustible`, false);
+      // setValue(`sujetos.${index}.fechaini`, null);
+      // setValue(`sujetos.${index}.fechafin`, null);
     } else if (tipo === TipoSujeto.VEHICULO) {
-      setValue(`sujetos.${index}.nombres`, "");
-      setValue(`sujetos.${index}.apellido_paterno`, "");
-      setValue(`sujetos.${index}.apellido_materno`, "");
-      setValue(`sujetos.${index}.ci`, "");
-      setValue(`sujetos.${index}.complemento`, "");
+      setValue(`sujetos.${index}.ci`, null);
+      setValue(`sujetos.${index}.complemento`, null);
     }
   }, [tipo]);
-
-  useEffect(() => {
-    if (searchByCi) {
-      setValue(`sujetos.${index}.nombres`, "");
-      setValue(`sujetos.${index}.apellido_paterno`, "");
-      setValue(`sujetos.${index}.apellido_materno`, "");
-    } else {
-      setValue(`sujetos.${index}.ci`, "");
-      setValue(`sujetos.${index}.complemento`, "");
-    }
-  }, [searchByCi, index, setValue]);
 
   return (
     <Box
@@ -116,80 +101,24 @@ export const SujetoForm = ({
 
       {tipo === "persona" ? (
         <>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={!searchByCi}
-                onChange={() => setSearchByCi((prev) => !prev)}
-              />
-            }
-            label="Buscar por nombre en lugar de C.I."
-          />
-
           <Grid container spacing={2}>
-            {searchByCi ? (
-              <>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label={requiredLabel("C.I.")}
-                    {...register(`sujetos.${index}.ci`, { required: true })}
-                    error={!!errors?.sujetos?.[index]?.ci}
-                    helperText={errors?.sujetos?.[index]?.ci && "Requerido"}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label="Complemento"
-                    {...register(`sujetos.${index}.complemento`)}
-                    error={!!errors?.sujetos?.[index]?.complemento}
-                  />
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label={requiredLabel("Nombres")}
-                    {...register(`sujetos.${index}.nombres`, {
-                      required: true,
-                    })}
-                    error={!!errors?.sujetos?.[index]?.nombres}
-                    helperText={
-                      errors?.sujetos?.[index]?.nombres && "Requerido"
-                    }
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label={requiredLabel("Apellido Paterno")}
-                    {...register(`sujetos.${index}.apellido_paterno`, {
-                      required: true,
-                    })}
-                    error={!!errors?.sujetos?.[index]?.apellido_paterno}
-                    helperText={
-                      errors?.sujetos?.[index]?.apellido_paterno && "Requerido"
-                    }
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label={requiredLabel("Apellido Materno")}
-                    {...register(`sujetos.${index}.apellido_materno`, {
-                      required: true,
-                    })}
-                    error={!!errors?.sujetos?.[index]?.apellido_materno}
-                    helperText={
-                      errors?.sujetos?.[index]?.apellido_materno && "Requerido"
-                    }
-                  />
-                </Grid>
-              </>
-            )}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                fullWidth
+                label={requiredLabel("C.I.")}
+                {...register(`sujetos.${index}.ci`, { required: true })}
+                error={!!errors?.sujetos?.[index]?.ci}
+                helperText={errors?.sujetos?.[index]?.ci && "Requerido"}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                fullWidth
+                label="Complemento"
+                {...register(`sujetos.${index}.complemento`)}
+                error={!!errors?.sujetos?.[index]?.complemento}
+              />
+            </Grid>
           </Grid>
         </>
       ) : (
@@ -201,7 +130,7 @@ export const SujetoForm = ({
             error={!!errors?.sujetos?.[index]?.placa}
             helperText={errors?.sujetos?.[index]?.placa && "Requerido"}
           />
-          {anhSelected && (
+          {/*anhSelected && (
             <FormControlLabel
               control={
                 <Checkbox
@@ -211,8 +140,8 @@ export const SujetoForm = ({
               label="¿Incluir datos de carga de combustible?"
               sx={{ mt: 2 }}
             />
-          )}
-          {incluirCarga && (
+          )*/}
+          {/*incluirCarga && (
             <>
               <TextField
                 fullWidth
@@ -233,7 +162,7 @@ export const SujetoForm = ({
                 helperText={errors?.sujetos?.[index]?.fechafin && "Requerido"}
               />
             </>
-          )}
+          )*/}
         </Box>
       )}
     </Box>

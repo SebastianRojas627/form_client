@@ -15,7 +15,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router";
 import HomeIcon from "@mui/icons-material/Home";
-import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import { Urls } from "../utils/routes";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect, useState } from "react";
@@ -32,7 +31,6 @@ const sidebarLinks = [
   { text: 'Home', url: Urls.HOME, icon: <HomeIcon /> },
   { text: 'Nueva Solicitud de Informacion', url: Urls.NUEVA, icon: <SearchIcon /> },
   { text: 'Historial de Solicitudes', url: Urls.HISTORY, icon: <TaskIcon /> },
-  { text: 'Reportes', url: Urls.REPORTS, icon: <PendingIcon /> },
 ];
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -161,12 +159,13 @@ export default function Sidebar() {
           </IconButton>
           <Box
             component="img"
-            src="\Nexus_30171.png"
+            src="\Nexus.jpg"
             alt="Nexus Logo"
             sx={{
               height: 40,
               width: "auto",
               mr: 2,
+              borderRadius: 1
             }}
           />
           <Typography

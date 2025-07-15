@@ -38,11 +38,10 @@ export function ConfirmationSummary({ data }: Props) {
             {sujeto.tipo === TipoSujeto.PERSONA ? (
               <>
                 <Typography variant="body2">
-                  <strong>Nombre completo:</strong> {sujeto.nombres}{" "}
-                  {sujeto.apellido_paterno} {sujeto.apellido_materno}
+                  <strong>CI:</strong> {sujeto.ci}
                 </Typography>
                 <Typography variant="body2">
-                  <strong>CI:</strong> {sujeto.ci}
+                  <strong>Complemento:</strong> {sujeto.complemento}
                 </Typography>
               </>
             ) : (
@@ -50,18 +49,18 @@ export function ConfirmationSummary({ data }: Props) {
                 <strong>Placa:</strong> {sujeto.placa}
               </Typography>
             )}
-            {sujeto.carguio_combustible && (
+            {/*sujeto.carguio_combustible && (
               <Typography variant="body2">
                 <strong>Con historial de carga de combustible</strong>
               </Typography>
-            )}
-            {(sujeto.fechaini || sujeto.fechafin) && (
+            )*/}
+            {/*(sujeto.fechaini || sujeto.fechafin) && (
               <Typography variant="body2">
                 <strong>Rango de fechas:</strong>{" "}
                 {String(sujeto.fechaini) ?? "-"} hasta{" "}
                 {String(sujeto.fechafin) ?? "-"}
               </Typography>
-            )}
+            )*/}
           </Box>
         ))}
       </Box>
@@ -69,16 +68,16 @@ export function ConfirmationSummary({ data }: Props) {
       <Box sx={{ mt: 2 }}>
         <Typography variant="subtitle1">Datos del caso:</Typography>
         <Typography variant="body2">
-          <strong>N° de caso:</strong> {data.datos_caso.numero_caso_unidad}
+          <strong>N° de caso:</strong> {data.numero_caso_unidad}
         </Typography>
         <Typography variant="body2">
-          <strong>Delito:</strong> {data.datos_caso.delito}
+          <strong>Delito:</strong> {data.delito}
         </Typography>
         <Typography variant="body2">
-          <strong>Investigador:</strong> {data.datos_caso.investigador}
+          <strong>Investigador:</strong> {data.investigador}
         </Typography>
         <Typography variant="body2">
-          <strong>Unidad:</strong> {data.datos_caso.unidad_investigativa}
+          <strong>Unidad:</strong> {data.unidad_investigativa}
         </Typography>
       </Box>
     </>

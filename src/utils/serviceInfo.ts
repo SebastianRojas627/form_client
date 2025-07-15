@@ -7,14 +7,14 @@ export const servicios: Record<keyof SistemasSolicitados, { label: string; descr
   },
   sinarap: {
     label: "SINARAP",
-    description: "Antecedentes penales y registros criminales.",
+    description: "Antecedentes policiales y registros criminales.",
   },
   itv: {
     label: "ITV",
     description: "Información técnica de vehículos (placa, marca, etc.)",
   },
-  anh: {
-    label: "ANH",
-    description: "Carguío de combustible y otros datos de la Agencia Nacional de Hidrocarburos.",
-  },
+  // anh: {
+  //   label: "ANH",
+  //   description: "Carguío de combustible y otros datos de la Agencia Nacional de Hidrocarburos.",
+  // },
 };

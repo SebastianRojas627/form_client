@@ -3,8 +3,11 @@ export interface SolicitudInformacion {
   numero_caso: number;
   delito: string;
   investigador: string;
+  analista_cfi: string;
+  numero_copias: number;
   unidad_investigativa: string;
   numero_caso_unidad: string;
+  consulta_libre: boolean
   sujetos: SujetoBusqueda[];
   sistemas: SistemasSolicitados;
   fecha_solicitud: Date;
@@ -15,20 +18,17 @@ export interface SistemasSolicitados {
   segip: boolean;
   itv: boolean;
   sinarap: boolean;
-  anh: boolean;
+  // anh: boolean;
 }
 
 export interface SujetoBusqueda {
   tipo: TipoSujeto;
-  nombres: string;
-  apellido_paterno: string;
-  apellido_materno: string;
-  ci: string;
-  complemento: string;
-  placa: string;
-  carguio_combustible: boolean;
-  fechaini: Date | null;
-  fechafin: Date | null;
+  ci: string | null;
+  complemento: string | null;
+  placa: string | null;
+  // carguio_combustible: boolean;
+  // fechaini: Date | null;
+  // fechafin: Date | null;
 }
 
 export interface ObjetoBusqueda {
@@ -66,7 +66,7 @@ export interface RespuestaSujeto {
 
   itv?: RespuestaItv;
 
-  anh?: RespuestaAnh;
+  // anh?: RespuestaAnh;
 }
 
 export interface GenerateReport {
